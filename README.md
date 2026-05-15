@@ -1,16 +1,29 @@
-## Hi there 👋
+## Hi，这里是青い夏!
 
-<!--
-**fluckyflucky/fluckyflucky** is a ✨ _special_ ✨ repository because its `README.md` (this file) appears on your GitHub profile.
+同济大学计科在读。前后端全栈 / Agent / 游戏开发，喜欢做有意思的事情。是一个一到夏天就躁动不安，时刻计划着踏上旅途的白日梦想家。
 
-Here are some ideas to get you started:
+### 关于我
 
-- 🔭 I’m currently working on ...
-- 🌱 I’m currently learning ...
-- 👯 I’m looking to collaborate on ...
-- 🤔 I’m looking for help with ...
-- 💬 Ask me about ...
-- 📫 How to reach me: ...
-- 😄 Pronouns: ...
-- ⚡ Fun fact: ...
--->
+**爱好旅行 / 摄影 / 绘画**。最喜欢的季节是**夏天**，这个炎热的季节承载了我绝大多数的美好回忆。在绘画时我比较喜欢蓝绿色系，所以在创作相关的地方，我会使用一个名字：[青い夏](https://aoinatsu.com/#/thoughts/natsu-no-iro-wa-ao)
+
+如我的头像所示，是 **ヨルシカ(Yorushika)** 的歌迷。目前喜欢的音乐风格是 J-POP ，听的比较多的乐队包括但不限于 **あたらよ / ヨルシカ / H△G** ，喜欢的唱见/歌手有 **鹿乃 / 锁那 / しほ /　Kotoha / ねんね** 等。
+
+平时主要玩的游戏有FPS，如**战地风云系列**（主要为1/5/6）/ **PUBG** 等，以及一些经营建造/模拟类游戏，包括但不限于：**都市天际线2 / 幻兽帕鲁 / 海狸浮生记 / 文明6 / 明日方舟:终末地 / Minecraft**，驾驶类则是 **微软模拟飞行 / 极限竞速:地平线系列**
+
+
+### 个人站 [aoinatsu.com](https://aoinatsu.com)
+- 纯前端，Vue 3 + Vite + Tailwind CSS 搭载在 GitHub Pages
+- 偶尔写一些技术笔记，前后端都有涉及，方向会比较杂
+- 有时候会丢一些不会在社交媒体上发的，比较中二的随笔或者感悟，也会放一些拍的照片
+- 网站内置一个在线工具箱（纯前端实现），目前有JSON 格式化、Base64、时间戳转换、下载速度计算器。如果你有什么希望我做的功能，欢迎[留言](https://github.com/fluckyflucky/fluckyflucky/issues)
+- 有一个基于 JMdict 的日语词典，支持单词搜索和单词卡片（主要是给自己坐地铁背单词用，如果有好想法请[留言](https://github.com/fluckyflucky/fluckyflucky/issues)！）
+
+
+### 技术栈
+
+主要开发使用语言：C/C++ / Java / Python / Go / Rust / JavaScript
+
+在工作方面，主要做 **Web全栈开发** 相关，自己写的小玩具也有一些 **Agent 开发** / **Unity 游戏开发** 等方面的项目，总的来说比较兴趣广泛，喜欢探索一些新鲜事物
+
+<!--START_SECTION:waka-->
+<!--END_SECTION:waka-->

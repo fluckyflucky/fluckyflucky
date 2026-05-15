@@ -1,4 +1,4 @@
-name: Waka Pie Chart
+name: Language Pie Chart
 
 on:
   schedule:
@@ -17,45 +17,54 @@ jobs:
         with:
           persist-credentials: false
 
-      - name: Generate pie chart
+      - name: Generate language pie chart
+        env:
+          GH_TOKEN: ${{ github.token }}
         run: |
-          if [ -z "${{ secrets.WAKATIME_API_KEY }}" ]; then
-            echo "::warning::WAKATIME_API_KEY secret is not set. Skipping."
+          # Fetch all repos and aggregate language bytes
+          echo "Fetching repos..."
+          REPOS=$(gh api "users/fluckyflucky/repos?per_page=100&type=owner" --jq '.[].full_name')
+
+          declare -A LANG_TOTAL
+          while IFS= read -r repo; do
+            echo "  Processing $repo..."
+            LANGS=$(gh api "repos/$repo/languages" --jq 'to_entries[] | "\(.key) \(.value)"' 2>/dev/null || echo "")
+            while IFS=' ' read -r lang bytes; do
+              [ -z "$lang" ] && continue
+              LANG_TOTAL["$lang"]=$(( ${LANG_TOTAL["$lang"]:-0} + bytes ))
+            done <<< "$LANGS"
+          done <<< "$REPOS"
+
+          # Calculate total
+          TOTAL=0
+          for bytes in "${LANG_TOTAL[@]}"; do
+            TOTAL=$((TOTAL + bytes))
+          done
+
+          if [ "$TOTAL" -eq 0 ]; then
+            echo "::warning::No language data found. Skipping update."
             exit 0
           fi
 
-          RESP=$(curl -s -w "\n%{http_code}" \
-            "https://wakatime.com/api/v1/users/current/stats/last_7_days?api_key=${{ secrets.WAKATIME_API_KEY }}")
+          # Sort by bytes desc, take top 8
+          LABELS_ARR=()
+          DATA_ARR=()
+          while IFS=$'\t' read -r bytes lang; do
+            pct=$(echo "scale=2; $bytes * 100 / $TOTAL" | bc)
+            LABELS_ARR+=("$lang")
+            DATA_ARR+=("$pct")
+          done < <(
+            for lang in "${!LANG_TOTAL[@]}"; do
+              echo "${LANG_TOTAL[$lang]}"$'\t'"$lang"
+            done | sort -rn | head -8
+          )
 
-          HTTP_CODE=$(echo "$RESP" | tail -1)
-          BODY=$(echo "$RESP" | sed '$d')
-
-          echo "HTTP status: $HTTP_CODE"
-
-          if [ "$HTTP_CODE" != "200" ]; then
-            echo "::error::WakaTime API returned HTTP $HTTP_CODE"
-            echo "$BODY"
-            exit 1
-          fi
-
-          # Debug: check response structure
-          LANG_COUNT=$(echo "$BODY" | jq -r '.data.languages | length')
-          echo "Language count: $LANG_COUNT"
-
-          if [ "$LANG_COUNT" = "null" ] || [ "$LANG_COUNT" -eq 0 ]; then
-            echo "::warning::No language data in last 7 days. Skipping update."
-            echo "Full response:"
-            echo "$BODY" | jq .
-            exit 0
-          fi
-
-          LANGS=$(echo "$BODY" | jq -c '[.data.languages[:8] | .[] | {label: .name, pct: .percent}]')
-
-          LABELS=$(echo "$LANGS" | jq '[.[].label]')
-          DATA=$(echo "$LANGS" | jq '[.[].pct]')
+          # Build JSON arrays
+          LABELS_JSON=$(printf '%s\n' "${LABELS_ARR[@]}" | jq -R . | jq -s .)
+          DATA_JSON=$(printf '%s\n' "${DATA_ARR[@]}" | jq -R 'tonumber' | jq -s .)
           COLORS='["#f97316","#f59e0b","#84cc16","#22c55e","#14b8a6","#3b82f6","#8b5cf6","#ec4899"]'
 
-          CHART=$(jq -n --argjson labels "$LABELS" --argjson data "$DATA" --argjson colors "$COLORS" '{
+          CHART=$(jq -n --argjson labels "$LABELS_JSON" --argjson data "$DATA_JSON" --argjson colors "$COLORS" '{
             type: "pie",
             data: {
               labels: $labels,
@@ -71,7 +80,7 @@ jobs:
           ENCODED=$(echo "$CHART" | jq -sRr @uri)
           IMG="https://quickchart.io/chart?w=500&h=300&c=${ENCODED}"
 
-          sed -i "/<!--START_SECTION:waka-->/,/<!--END_SECTION:waka-->/c\<!--START_SECTION:waka-->\n[![](${IMG})](https://wakatime.com/@fluckyflucky)\n<!--END_SECTION:waka-->" README.md
+          sed -i "/<!--START_SECTION:waka-->/,/<!--END_SECTION:waka-->/c\<!--START_SECTION:waka-->\n[![](${IMG})](https://github.com/fluckyflucky)\n<!--END_SECTION:waka-->" README.md
 
       - name: Commit & push
         env:
@@ -81,5 +90,5 @@ jobs:
           git config user.email "github-actions[bot]@users.noreply.github.com"
           git remote set-url origin "https://x-access-token:${GH_TOKEN}@github.com/${{ github.repository }}.git"
           git add README.md
-          git diff --staged --quiet || git commit -m "Update WakaTime chart"
+          git diff --staged --quiet || git commit -m "Update language chart"
           git push

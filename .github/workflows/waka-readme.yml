@@ -39,10 +39,10 @@ jobs:
           fi
 
           # Debug: check response structure
-          HAS_LANGS=$(echo "$BODY" | jq -r '.data.languages')
-          echo "Has languages field: $HAS_LANGS"
+          LANG_COUNT=$(echo "$BODY" | jq -r '.data.languages | length')
+          echo "Language count: $LANG_COUNT"
 
-          if [ "$HAS_LANGS" = "null" ] || [ -z "$HAS_LANGS" ]; then
+          if [ "$LANG_COUNT" = "null" ] || [ "$LANG_COUNT" -eq 0 ]; then
             echo "::warning::No language data in last 7 days. Skipping update."
             echo "Full response:"
             echo "$BODY" | jq .

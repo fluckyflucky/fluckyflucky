@@ -33,17 +33,14 @@
 <table>
   <tr>
     <td align="right" valign="top" width="56"><sub>爱好</sub></td>
-    <td width="12"></td>
     <td><b>爱好旅行 / 摄影 / 绘画</b>。最喜欢的季节是<b>夏天</b>，这个炎热的季节承载了我绝大多数的美好回忆。在绘画时我比较喜欢蓝绿色系，所以在创作相关的地方，我会使用一个名字：<a href="https://aoinatsu.com/#/thoughts/natsu-no-iro-wa-ao">青い夏</a></td>
   </tr>
   <tr>
     <td align="right" valign="top" width="56"><sub>音乐</sub></td>
-    <td width="12"></td>
     <td>如我的头像所示，是 <b>ヨルシカ(Yorushika)</b> 的歌迷。目前喜欢的音乐风格是 J-POP ，听的比较多的乐队包括但不限于 <b>あたらよ / ヨルシカ / H△G</b> ，喜欢的唱见/歌手有 <b>鹿乃 / 锁那 / しほ / Kotoha / ねんね</b> 等。</td>
   </tr>
   <tr>
     <td align="right" valign="top" width="56"><sub>游戏</sub></td>
-    <td width="12"></td>
     <td>平时主要玩的游戏有FPS，如<b>战地风云系列</b>（主要为1/5/6）/ <b>PUBG</b> 等，以及一些经营建造/模拟类游戏，包括但不限于：<b>都市天际线2 / 幻兽帕鲁 / 海狸浮生记 / 文明6 / 明日方舟:终末地 / Minecraft</b>，驾驶类则是 <b>微软模拟飞行 / 极限竞速:地平线系列</b></td>
   </tr>
 </table>
@@ -62,8 +59,8 @@
 
 - 偶尔写一些技术笔记，前后端都有涉及，方向会比较杂
 - 有时候会丢一些不会在社交媒体上发的，比较中二的随笔或者感悟，也会放一些拍的照片
-- 网站内置一个在线工具箱（纯前端实现），目前有JSON 格式化、Base64、时间戳转换、下载速度计算器。如果你有什么希望我做的功能，欢迎[留言](https://github.com/fluckyflucky/fluckyflucky/issues)
-- 有一个基于 JMdict 的日语词典，支持单词搜索和单词卡片（主要是给自己坐地铁背单词用，如果有好想法请[留言](https://github.com/fluckyflucky/fluckyflucky/issues)！）
+- 网站内置一个在线工具箱（纯前端实现），目前有JSON 格式化、Base64、时间戳转换、下载速度计算器。如果你有什么希望我做的功能，欢迎[留言](https://github.com/fluckyflucky/fluckyflucky/issues/new)
+- 有一个基于 JMdict 的日语词典，支持单词搜索和单词卡片（主要是给自己坐地铁背单词用，如果有好想法请[留言](https://github.com/fluckyflucky/fluckyflucky/issues/new)！）
 
 <br>
 

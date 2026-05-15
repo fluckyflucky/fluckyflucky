@@ -13,14 +13,38 @@ jobs:
 
       - name: Generate pie chart
         run: |
-          # Fetch WakaTime stats
-          RESP=$(curl -s "https://wakatime.com/api/v1/users/current/stats/last_7_days" \
-            -H "Authorization: Basic $(echo -n "${{ secrets.WAKATIME_API_KEY }}" | base64)")
+          if [ -z "${{ secrets.WAKATIME_API_KEY }}" ]; then
+            echo "::warning::WAKATIME_API_KEY secret is not set. Skipping."
+            exit 0
+          fi
 
-          # Extract top 8 languages
-          LANGS=$(echo "$RESP" | jq -c '[.data.languages[:8] | .[] | {label: .name, pct: .percent}]')
+          RESP=$(curl -s -w "\n%{http_code}" \
+            "https://wakatime.com/api/v1/users/current/stats/last_7_days?api_key=${{ secrets.WAKATIME_API_KEY }}")
 
-          # Build Chart.js config
+          HTTP_CODE=$(echo "$RESP" | tail -1)
+          BODY=$(echo "$RESP" | sed '$d')
+
+          echo "HTTP status: $HTTP_CODE"
+
+          if [ "$HTTP_CODE" != "200" ]; then
+            echo "::error::WakaTime API returned HTTP $HTTP_CODE"
+            echo "$BODY"
+            exit 1
+          fi
+
+          # Debug: check response structure
+          HAS_LANGS=$(echo "$BODY" | jq -r '.data.languages')
+          echo "Has languages field: $HAS_LANGS"
+
+          if [ "$HAS_LANGS" = "null" ] || [ -z "$HAS_LANGS" ]; then
+            echo "::warning::No language data in last 7 days. Skipping update."
+            echo "Full response:"
+            echo "$BODY" | jq .
+            exit 0
+          fi
+
+          LANGS=$(echo "$BODY" | jq -c '[.data.languages[:8] | .[] | {label: .name, pct: .percent}]')
+
           LABELS=$(echo "$LANGS" | jq '[.[].label]')
           DATA=$(echo "$LANGS" | jq '[.[].pct]')
           COLORS='["#f97316","#f59e0b","#84cc16","#22c55e","#14b8a6","#3b82f6","#8b5cf6","#ec4899"]'
@@ -38,11 +62,9 @@ jobs:
             }
           }')
 
-          # URL-encode and build image URL
           ENCODED=$(echo "$CHART" | jq -sRr @uri)
           IMG="https://quickchart.io/chart?w=500&h=300&c=${ENCODED}"
 
-          # Update README
           sed -i "/<!--START_SECTION:waka-->/,/<!--END_SECTION:waka-->/c\<!--START_SECTION:waka-->\n[![](${IMG})](https://wakatime.com/@fluckyflucky)\n<!--END_SECTION:waka-->" README.md
 
       - name: Commit & push
